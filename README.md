@@ -1,0 +1,2 @@
+# query mysql for python
+ 
