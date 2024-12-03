@@ -1,8 +1,9 @@
-from koneksi import create_connection  # Modul koneksi1
+from koneksi import create_connection  # Modul koneksi
 from create_db import create_database  # Modul untuk membuat database
 from list_db import list_databases     # Modul untuk daftar database
 from drop_db import drop_database      # Modul untuk menghapus database
 from use_db import use_database        # Modul untuk memilih database
+from operasi_table import list_tables, create_table, drop_table  # Modul untuk operasi tabel
 
 
 def get_current_database(mydb):
@@ -30,15 +31,24 @@ def main():
 
             # Menampilkan menu
             print("\nMenu:")
-            print(f"Database yang sedang digunakan: {current_db}")  # Menampilkan database aktif
+            print("========")
+            print("Database")
+            print("========")
+            print(f"Database yang sedang digunakan: {current_db}")
             print("1. List database")
             print("2. Create database")
             print("3. Delete Database")
             print("4. Use database")
+            print("========")
+            print("Tabel")
+            print("========")
+            print("5. List tables")
+            print("6. Create table")
+            print("7. Delete table")
             print("Ketik 'exit' untuk keluar")
 
             # Meminta input perintah dari pengguna
-            command = input("Masukkan nomor perintah (1/2/3/4): ").strip()
+            command = input("Masukkan nomor perintah: ").strip()
 
             if command == "1":  # List database
                 list_databases()
@@ -49,17 +59,37 @@ def main():
             elif command == "3":  # Hapus database
                 drop_database()
 
+
             elif command == "4":  # Gunakan database
                 selected_db = use_database(mydb)
                 if selected_db:
                     current_db = selected_db  # Perbarui nama database aktif
+
+
+            elif command == "5":  # List tables
+                if current_db != "None":
+                    list_tables(mydb)
+                else:
+                    print("Tidak ada database yang dipilih. Silakan pilih database terlebih dahulu.")
+
+            elif command == "6":  # Create table
+                if current_db != "None":
+                    create_table(mydb)
+                else:
+                    print("Tidak ada database yang dipilih. Silakan pilih database terlebih dahulu.")
+
+            elif command == "7":  # Delete table
+                if current_db != "None":
+                    drop_table(mydb)
+                else:
+                    print("Tidak ada database yang dipilih. Silakan pilih database terlebih dahulu.")
 
             elif command.lower() == "exit":  # Keluar dari program
                 print("Terima kasih! Program selesai.")
                 break
 
             else:
-                print("Perintah tidak valid. Silakan masukkan 1, 2, 3, 4, atau 'exit'.")
+                print("Perintah tidak valid. Silakan masukkan nomor yang benar.")
 
         mydb.close()  # Menutup koneksi setelah keluar dari loop
     else:
