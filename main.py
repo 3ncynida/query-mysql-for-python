@@ -1,49 +1,70 @@
-from koneksi import create_connection  # Modul koneksi
-from list_db import list_databases           # Modul untuk daftar database
-from drop_db import drop_database            # Modul untuk menghapus database
-import mysql.connector
+from koneksi import create_connection  # Modul koneksi1
+from create_db import create_database  # Modul untuk membuat database
+from list_db import list_databases     # Modul untuk daftar database
+from drop_db import drop_database      # Modul untuk menghapus database
+from use_db import use_database        # Modul untuk memilih database
 
-# Fungsi utama untuk menjalankan perintah
+
+def get_current_database(mydb):
+    """
+    Mendapatkan nama database yang sedang digunakan.
+    """
+    try:
+        cursor = mydb.cursor()
+        cursor.execute("SELECT DATABASE()")
+        result = cursor.fetchone()
+        return result[0] if result and result[0] else "None"  # Default 'None' jika tidak ada database
+    except Exception as e:
+        print(f"Error fetching current database: {e}")
+        return "Error"
+
+
 def main():
     # Membuat koneksi ke MySQL
     mydb = create_connection()
 
     if mydb:  # Periksa apakah koneksi berhasil
         while True:  # Loop tak terbatas
+            # Mendapatkan nama database yang digunakan
+            current_db = get_current_database(mydb)
+
+            # Menampilkan menu
             print("\nMenu:")
+            print(f"Database yang sedang digunakan: {current_db}")  # Menampilkan database aktif
             print("1. List database")
-            print("2. Buat database")
-            print("3. Hapus Database")
-            print("ketik 'exit' untuk keluar")
+            print("2. Create database")
+            print("3. Delete Database")
+            print("4. Use database")
+            print("Ketik 'exit' untuk keluar")
 
             # Meminta input perintah dari pengguna
-            command = input("Masukkan nomor perintah (1/2/3): ")
+            command = input("Masukkan nomor perintah (1/2/3/4): ").strip()
 
             if command == "1":  # List database
-                list_databases()  # Memanggil fungsi dari modul list_db
-            
+                list_databases()
+
             elif command == "2":  # Buat database
-                db_name = input("Masukkan nama database yang ingin dibuat: ")
-                mycursor = mydb.cursor()
-                try:
-                    mycursor.execute(f"CREATE DATABASE {db_name}")
-                    print(f"Database '{db_name}' berhasil dibuat!")
-                except mysql.connector.Error as err:
-                    print(f"Error saat membuat database: {err}")
-                    
+                create_database()
+
             elif command == "3":  # Hapus database
-                drop_database()  # Memanggil fungsi dari modul drop_db
-            
+                drop_database()
+
+            elif command == "4":  # Gunakan database
+                selected_db = use_database(mydb)
+                if selected_db:
+                    current_db = selected_db  # Perbarui nama database aktif
+
             elif command.lower() == "exit":  # Keluar dari program
                 print("Terima kasih! Program selesai.")
-                break  # Keluar dari loop
-            
+                break
+
             else:
-                print("Perintah tidak valid. Silakan masukkan 1, 2, 3, atau 'exit'.")
-        
+                print("Perintah tidak valid. Silakan masukkan 1, 2, 3, 4, atau 'exit'.")
+
         mydb.close()  # Menutup koneksi setelah keluar dari loop
     else:
         print("Koneksi ke MySQL gagal. Tidak dapat melanjutkan.")
+
 
 # Menjalankan program utama
 if __name__ == "__main__":

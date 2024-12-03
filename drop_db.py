@@ -4,6 +4,9 @@ def drop_database():
     # Membuat koneksi ke MySQL
     mydb = create_connection()
 
+    if mydb is None:
+        return  # Jika koneksi gagal, hentikan fungsi
+
     if mydb:  # Memeriksa apakah koneksi berhasil
         try:
             # Meminta nama database yang ingin dihapus
@@ -20,6 +23,5 @@ def drop_database():
             print(f"Error saat menghapus database: {e}")
 
         finally:
+            mycursor.close()
             mydb.close()  # Menutup koneksi setelah operasi selesai
-    else:
-        print("Koneksi ke MySQL gagal. Tidak dapat menghapus database.")

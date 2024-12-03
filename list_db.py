@@ -13,7 +13,7 @@ def list_databases():
             # Menjalankan perintah untuk menampilkan semua database
             mycursor.execute("SHOW DATABASES")
             
-            print("Daftar database yang tersedia:")
+            print("\nDaftar database yang tersedia:")
             for db in mycursor:
                 print(f"- {db[0]}")  # Menampilkan nama database
         except Exception as e:
@@ -22,6 +22,3 @@ def list_databases():
             mydb.close()  # Menutup koneksi
     else:
         print("Koneksi ke MySQL gagal.")
-
-# Memanggil fungsi untuk menampilkan daftar database
-list_databases()
