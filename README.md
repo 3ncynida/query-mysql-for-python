@@ -3,3 +3,4 @@
  * you need to install the module first!!<br>
    copy this to your CLI<br>
    - python -m pip install mysql-connector-python
+   - pip install tabulate
